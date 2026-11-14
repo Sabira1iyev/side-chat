@@ -1,7 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
-import type { Message } from "@/src/types/types";
-
+import { Message } from "@/src/types/types";
 const client = new Anthropic();
 
 export async function POST(req: Request) {
