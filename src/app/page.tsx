@@ -1,9 +1,10 @@
 "use client"
 
 import { Message } from "../types/types";
-import { useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { MessageCircle, X, Send } from "lucide-react";
 import "./globals.css";
+import SideChatWindow from "../components/SideChatWindow";
 
 
 
@@ -12,7 +13,14 @@ export default function Home() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState("");
-
+  const [menu, setMenu] = useState<{
+    x: number,
+    y: number;
+    text: string;
+    messageIndex: number;
+  } | null>(null);
+  const [sideChatOpen, setSideChatOpen] = useState(false);
+  const sideButtonRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.currentTarget;
@@ -28,6 +36,8 @@ export default function Home() {
     setMessages(newMessages);
     setUserInput("");
     const textarea = document.querySelector<HTMLTextAreaElement>("#message-input");
+
+
     if (textarea) textarea.style.height = "auto";
     try {
       const res = await fetch("/api/chat", {
@@ -48,10 +58,36 @@ export default function Home() {
     }
   }
 
+  const handleContextMenu = (e: React.MouseEvent, index: number) => {
+    const text = window.getSelection()?.toString().trim();
+    if (!text) return;
+    e.preventDefault();
+    setMenu({
+      x: e.clientX,
+      y: e.clientY,
+      text,
+      messageIndex: index,
+    });
+  }
+
+  useEffect(() => {
+    const clickOutside = (event: MouseEvent) => {
+      const click = sideButtonRef.current?.contains(event.target as Node);
+      if (!click) {
+        setMenu(null);
+      }
+    };
+    document.addEventListener("mousedown", clickOutside);
+    return () => {
+      document.removeEventListener("mousedown", clickOutside)
+    }
+  }, [menu]);
+
 
   return (
-    <div className="relative flex h-screen flex-col bg-zinc-950 text-zinc-100">
-      <header className="border-b border-zinc-800 bg-zinc-900 px-6 py-4">
+
+    <div className="relative flex h-screen flex-col bg-zinc-900 text-zinc-100">
+      <header className="border-b border-zinc-800 bg-zinc-950 px-6 py-4">
         <h1 className="text-lg font-semibold">Phoenix</h1>
       </header>
 
@@ -59,13 +95,28 @@ export default function Home() {
         <div className="mx-auto flex max-w-2xl flex-col gap-4">
           {messages.map((msg, idx) => (
             <div className={`animate_message py-2 px-5 my-1 rounded-[18px] w-max max-w-[80%] text-sm ${msg.role === "user" ? "bg-blue-600 text-white ml-auto shadow-sm" : "text-text shadow-sm"}`}
-              key={idx}>
+              key={idx}
+              onContextMenu={(e) => handleContextMenu(e, idx)}
+            >
               <div className="space-y-4 font-medium max-w-full overflow-hidden wrap-break-word">
                 {msg.content}
               </div>
             </div>
           ))}
         </div>
+        {menu && (
+          <div className="fixed z-50" style={{ left: menu.x, top: menu.y }}
+            ref={sideButtonRef}
+          >
+            <button
+              type="button"
+              className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 shadow-lg hover:bg-zinc-700"
+              onClick={() => setSideChatOpen(!sideChatOpen)}
+            >
+              bunu ayrica ogren
+            </button>
+          </div>
+        )}
       </main>
 
 
@@ -100,6 +151,11 @@ export default function Home() {
           </button>
         </div>
       </form>
+      {
+        sideChatOpen && (
+          <SideChatWindow />
+        )
+      }
     </div>
   );
 }
