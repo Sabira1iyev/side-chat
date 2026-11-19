@@ -1,8 +1,8 @@
 "use client"
 
-import { Message } from "../types/types";
-import { use, useEffect, useRef, useState } from "react";
-import { MessageCircle, X, Send } from "lucide-react";
+import { Message } from "../types/type";
+import { useEffect, useRef, useState } from "react";
+import { Send } from "lucide-react";
 import "./globals.css";
 import SideChatWindow from "../components/SideChatWindow";
 
@@ -50,8 +50,14 @@ export default function Home() {
         })
       })
       const data = await res.json();
+      if (!res.ok) {
+        console.log("Error: ", data.message)
+      }
+
       const assistantMessage: Message = { role: "assistant", content: data.reply }
       setMessages([...newMessages, assistantMessage]);
+
+
     }
     catch (error) {
       console.log("Assistant Error", error);
@@ -111,7 +117,11 @@ export default function Home() {
             <button
               type="button"
               className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 shadow-lg hover:bg-zinc-700"
-              onClick={() => setSideChatOpen(!sideChatOpen)}
+              onClick={() => {
+                setSideChatOpen(true)
+                setMenu(null);
+              }}
+
             >
               bunu ayrica ogren
             </button>
@@ -127,7 +137,7 @@ export default function Home() {
           handleSendMessage();
         }}
       >
-        <div className={`mx-auto flex max-w-2xl gap-2 rounded-3xl border border-zinc-700 bg-zinc-800 p-2 ${userInput.length === 0 ? "item-center" : "items-end"
+        <div className={`mx-auto flex max-w-2xl gap-2 rounded-3xl border border-zinc-700 bg-zinc-800 p-2 ${userInput.length === 0 ? "items-center" : "items-end"
           }`}>
           <textarea
             onKeyDown={(e) => {
