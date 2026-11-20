@@ -4,7 +4,7 @@ import { Message } from "../types/type"
 import { useState, useEffect } from "react"
 import ReactMarkdown from "react-markdown";
 import { MessageCircle, X, Send } from "lucide-react";
-
+import "@/src/app/globals.css"
 
 interface SideChatWindowProp {
     onClose: () => void;
@@ -56,7 +56,7 @@ export default function SideChatWindow({ onClose, sideSelectedText }: SideChatWi
 
     return (
 
-        <aside className="relative mr-4 flex h-[80vh] w-200 shrink-0 flex-col self-center overflow-hidden rounded-[28px] border border-white/10 bg-zinc-900/70 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-black/20 backdrop-blur-2xl backdrop-saturate-150">
+        <aside className="animate-modal relative mr-4 flex h-[80vh] w-200 shrink-0 flex-col self-center overflow-hidden rounded-[28px] border border-white/10 bg-zinc-900/70 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-black/20 backdrop-blur-2xl backdrop-saturate-150">
             <div className="flex-1 overflow-y-auto w-full px-2 pt-14 scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 {
                     sideChatMessages.map((msg, index) => (
