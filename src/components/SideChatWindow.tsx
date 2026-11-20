@@ -1,9 +1,9 @@
-"use client"
+﻿"use client"
 
 import { Message } from "../types/type"
 import { useState, useEffect } from "react"
 import ReactMarkdown from "react-markdown";
-import { MessageCircle, X } from "lucide-react";
+import { MessageCircle, X, Send } from "lucide-react";
 
 
 interface SideChatWindowProp {
@@ -43,28 +43,77 @@ export default function SideChatWindow({ onClose }: SideChatWindowProp) {
         }
         catch (error) {
             console.log("Side chat error: ", error);
-            setSideChateMessages([...newSideChatMessages, { role: "assistant", content: "⚠️ Connection error. Please try again." }])
+            setSideChateMessages([...newSideChatMessages, { role: "assistant", content: "âš ï¸ Connection error. Please try again." }])
         }
+    }
+
+    const handleSideChatChangeMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setSideChatUserInput(e.target.value);
+        const textarea = e.currentTarget;
+        textarea.style.height = "auto";
+        textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
     }
 
     return (
 
-        <div className="fixed flex flex-col bottom-33 right-4 w-87.5 h-100 bg-bg2 border border-border rounded-xl shadow-2xl">
-            <div className="flex-1 overflow-y-auto w-full my-2">
-                <div className="p-2 my-1 rounded-lg max-w-[80%] text-sm">
-                    <div className="space-y-4 font-medium max-w-full overflow-hidden wrap-break-word">
+        <aside className="relative mr-4 flex h-[80vh] w-150 shrink-0 flex-col self-center overflow-hidden rounded-[28px] border border-white/10 bg-zinc-900/70 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-black/20 backdrop-blur-2xl backdrop-saturate-150">
+            <div className="flex-1 overflow-y-auto w-full px-2 pt-14">
+                {
+                    sideChatMessages.map((msg, index) => (
+                        <div className={`animate_message py-2 px-5 my-1 rounded-[20px] w-max max-w-[80%] text-sm ${msg.role === "user" ? "bg-[#0a84ff] text-white ml-auto" : "bg-white/10 text-zinc-100"}`}
+                            key={index}
 
-                    </div>
-                </div>
+                        >
+                            <div className="space-y-4 font-medium max-w-full overflow-hidden wrap-break-word">
+                                <ReactMarkdown>{msg.content}</ReactMarkdown>
+                            </div>
+                        </div>
+                    ))}
+
+
             </div>
+                <form onSubmit={(e) => {
+                    e.preventDefault(),
+                        handleSendSideChatMessage();
+                }}
+                    className={`w-full px-4 py-4 ${sideChatMessages.length === 0 ? "absolute left-0 top-1/2 -translate-y-1/2" : "mt-auto"
+                        }`}
+                >
+                    <div className={`mx-auto flex max-w-2xl gap-2 rounded-full border border-white/10 bg-white/5 p-1.5 backdrop-blur transition focus-within:border-white/20 focus-within:bg-white/10 ${sideChatUserInput.length === 0 ? "items-center" : "items-end"
+                        }`}>
+                        <textarea
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" && !e.shiftKey) {
+                                    e.preventDefault();
+                                    e.currentTarget.form?.requestSubmit();
+                                }
+                            }}
+                            id="side-message-input"
+                            rows={1}
+                            value={sideChatUserInput}
+                            onChange={handleSideChatChangeMessage}
+                            className="max-h-50 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-5 text-zinc-100 outline-none placeholder:text-zinc-500 scrollbar-none"
+                        />
+                        <button
+                            type="submit"
+                            className="rounded-full bg-[#0a84ff] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#3395ff] active:scale-95"
+                        >
+                            <Send size={15} className="cursor-pointer" />
+                        </button>
+                    </div>
+                </form>
+
+
+
             <button
                 onClick={onClose}
-                className="fixed top-18 right-6 z-50 w-14 h-14 bg-blue-600 flex items-center justify-center rounded-full"
+                className="absolute top-3 right-3 z-50 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/10 text-zinc-300 backdrop-blur transition hover:bg-white/20 hover:text-white"
             >
-                {<X size={24} />}
+                <X size={16} />
 
             </button>
-        </div>
+        </aside>
 
     )
 }
+

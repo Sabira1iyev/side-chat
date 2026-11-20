@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { Message } from "../types/type";
 import { useEffect, useRef, useState } from "react";
@@ -61,7 +61,7 @@ export default function Home() {
     }
     catch (error) {
       console.log("Assistant Error", error);
-      setMessages([...newMessages, { role: "assistant", content: "⚠️ Connection error. Please try again." }])
+      setMessages([...newMessages, { role: "assistant", content: "âš ï¸ Connection error. Please try again." }])
     }
   }
 
@@ -93,10 +93,12 @@ export default function Home() {
 
   return (
 
-    <div className="relative flex h-screen flex-col bg-zinc-900 text-zinc-100">
+    <div className="flex h-screen flex-col bg-zinc-900 text-zinc-100">
       <header className="border-b border-zinc-800 bg-zinc-950 px-6 py-4">
         <h1 className="text-lg font-semibold">Phoenix</h1>
       </header>
+      <div className="flex min-h-0 flex-1">
+    <div className="relative flex min-w-0 flex-1 flex-col">
 
       <main className="flex-1 overflow-y-auto px-4 py-6">
         <div className="mx-auto flex max-w-2xl flex-col gap-4">
@@ -162,11 +164,14 @@ export default function Home() {
           </button>
         </div>
       </form>
+    </div>
       {
         sideChatOpen && (
           <SideChatWindow onClose={() => setSideChatOpen(false)} />
         )
       }
+      </div>
     </div>
   );
 }
+
