@@ -32,13 +32,15 @@ export default function SideChatWindow() {
                     }
                 )
             })
+            const data = await res.json();
+            const sideChatReply = data.reply || data.message || "Sorry, I couldn't get a response."
+            setSideChateMessages([...newSideChatMessages, { role: "assistant", content: sideChatReply }]);
         }
-        catch(error){
+        catch (error) {
             console.log("Side chat error: ", error);
+            setSideChateMessages([...newSideChatMessages, { role: "assistant", content: "⚠️ Connection error. Please try again." }])
         }
-   }
-
-
+    }
 
     return (
         <div className="fixed flex flex-col bottom-33 right-4 w-87.5 h-100 bg-bg2 border border-border rounded-xl shadow-2xl">

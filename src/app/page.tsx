@@ -52,15 +52,16 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) {
         console.log("Error: ", data.message)
+        const reply = data.reply || data.message || "Soryy, I couldn't get a response.";
+        setMessages([...newMessages, { role: "assistant", content: reply }])
       }
 
       const assistantMessage: Message = { role: "assistant", content: data.reply }
       setMessages([...newMessages, assistantMessage]);
-
-
     }
     catch (error) {
       console.log("Assistant Error", error);
+      setMessages([...newMessages, { role: "assistant", content: "⚠️ Connection error. Please try again." }])
     }
   }
 
