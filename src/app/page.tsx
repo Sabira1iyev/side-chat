@@ -164,7 +164,7 @@ export default function Home() {
       </form>
       {
         sideChatOpen && (
-          <SideChatWindow />
+          <SideChatWindow onClose={() => setSideChatOpen(false)} />
         )
       }
     </div>

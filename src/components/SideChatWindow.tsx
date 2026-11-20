@@ -2,11 +2,16 @@
 
 import { Message } from "../types/type"
 import { useState, useEffect } from "react"
-import { Send } from "lucide-react"
+import ReactMarkdown from "react-markdown";
+import { MessageCircle, X } from "lucide-react";
 
 
+interface SideChatWindowProp {
+    onClose: () => void;
+}
 
-export default function SideChatWindow() {
+
+export default function SideChatWindow({ onClose }: SideChatWindowProp) {
 
     const [sideChatMessages, setSideChateMessages] = useState<Message[]>([]);
     const [sideChatUserInput, setSideChatUserInput] = useState("");
@@ -43,6 +48,7 @@ export default function SideChatWindow() {
     }
 
     return (
+
         <div className="fixed flex flex-col bottom-33 right-4 w-87.5 h-100 bg-bg2 border border-border rounded-xl shadow-2xl">
             <div className="flex-1 overflow-y-auto w-full my-2">
                 <div className="p-2 my-1 rounded-lg max-w-[80%] text-sm">
@@ -51,6 +57,14 @@ export default function SideChatWindow() {
                     </div>
                 </div>
             </div>
+            <button
+                onClick={onClose}
+                className="fixed top-18 right-6 z-50 w-14 h-14 bg-blue-600 flex items-center justify-center rounded-full"
+            >
+                {<X size={24} />}
+
+            </button>
         </div>
+
     )
 }
