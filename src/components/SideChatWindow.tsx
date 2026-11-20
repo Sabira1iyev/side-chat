@@ -16,6 +16,7 @@ export default function SideChatWindow({ onClose, sideSelectedText }: SideChatWi
 
     const [sideChatMessages, setSideChateMessages] = useState<Message[]>([]);
     const [sideChatUserInput, setSideChatUserInput] = useState(sideSelectedText);
+    
     const handleSendSideChatMessage = async () => {
         if (!sideChatUserInput) {
             return;
@@ -40,6 +41,7 @@ export default function SideChatWindow({ onClose, sideSelectedText }: SideChatWi
             const data = await res.json();
             const sideChatReply = data.reply || data.message || "Sorry, I couldn't get a response."
             setSideChateMessages([...newSideChatMessages, { role: "assistant", content: sideChatReply }]);
+            return;
         }
         catch (error) {
             console.log("Side chat error: ", error);
@@ -53,6 +55,10 @@ export default function SideChatWindow({ onClose, sideSelectedText }: SideChatWi
         textarea.style.height = "auto";
         textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
     }
+
+    useEffect(() => {
+        setSideChatUserInput(sideSelectedText);
+    },[sideSelectedText])
 
     return (
 

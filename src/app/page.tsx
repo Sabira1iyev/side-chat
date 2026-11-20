@@ -55,6 +55,7 @@ export default function Home() {
         console.log("Error: ", data.message)
         const reply = data.reply || data.message || "Soryy, I couldn't get a response.";
         setMessages([...newMessages, { role: "assistant", content: reply }])
+        return
       }
 
       const assistantMessage: Message = { role: "assistant", content: data.reply }
@@ -62,7 +63,7 @@ export default function Home() {
     }
     catch (error) {
       console.log("Assistant Error", error);
-      setMessages([...newMessages, { role: "assistant", content: "âš ï¸ Connection error. Please try again." }])
+      setMessages([...newMessages, { role: "assistant", content: "Connection error. Please try again." }])
     }
   }
 
@@ -122,6 +123,7 @@ export default function Home() {
                   type="button"
                   className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 shadow-lg hover:bg-zinc-700"
                   onClick={() => {
+                    
                     SideSetSelectedText(menu.text);
                     setSideChatOpen(true)
                     setMenu(null);
@@ -169,6 +171,7 @@ export default function Home() {
         </div>
         {sideChatOpen && (
           <SideChatWindow
+    
             onClose={() => setSideChatOpen(false)}
             sideSelectedText={sideSelectedText}
           />

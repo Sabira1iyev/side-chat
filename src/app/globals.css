@@ -69,5 +69,5 @@ body {
 }
 
 .animate_message{
-  animation: messagepop 0.4s ease-out forwards;
+  animation: message-pop 0.4s ease-out forwards;
 }
