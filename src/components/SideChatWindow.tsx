@@ -9,10 +9,12 @@ import "@/src/app/globals.css"
 interface SideChatWindowProp {
     onClose: () => void;
     sideSelectedText: string;
+    mainMessages: Message[];
+    messageIndex: number;
 }
 
 
-export default function SideChatWindow({ onClose, sideSelectedText }: SideChatWindowProp) {
+export default function SideChatWindow({ onClose, sideSelectedText, mainMessages, messageIndex }: SideChatWindowProp) {
 
     const [sideChatMessages, setSideChateMessages] = useState<Message[]>([]);
     const [sideChatUserInput, setSideChatUserInput] = useState(sideSelectedText);

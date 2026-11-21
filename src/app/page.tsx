@@ -4,6 +4,7 @@ import { Message } from "../types/type";
 import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import "./globals.css";
+import ReactMarkdown from "react-markdown";
 import SideChatWindow from "../components/SideChatWindow";
 
 
@@ -22,6 +23,7 @@ export default function Home() {
   const [sideChatOpen, setSideChatOpen] = useState(false);
   const sideButtonRef = useRef<HTMLDivElement>(null);
   const [sideSelectedText, SideSetSelectedText] = useState("");
+  const [mainMessageIndex, setMainMessageIndex] = useState(0);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.currentTarget;
@@ -110,7 +112,7 @@ export default function Home() {
                   onContextMenu={(e) => handleContextMenu(e, idx)}
                 >
                   <div className="space-y-4 font-medium max-w-full overflow-hidden wrap-break-word">
-                    {msg.content}
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
                   </div>
                 </div>
               ))}
@@ -123,8 +125,9 @@ export default function Home() {
                   type="button"
                   className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 shadow-lg hover:bg-zinc-700"
                   onClick={() => {
-                    
+
                     SideSetSelectedText(menu.text);
+                    setMainMessageIndex(menu.messageIndex);
                     setSideChatOpen(true)
                     setMenu(null);
                   }}
@@ -171,9 +174,11 @@ export default function Home() {
         </div>
         {sideChatOpen && (
           <SideChatWindow
-    
+
             onClose={() => setSideChatOpen(false)}
             sideSelectedText={sideSelectedText}
+            mainMessages={messages}
+            messageIndex = {mainMessageIndex}
           />
         )
         }
