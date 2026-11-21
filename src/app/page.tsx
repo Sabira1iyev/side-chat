@@ -60,8 +60,9 @@ export default function Home() {
         return
       }
 
-      const assistantMessage: Message = { role: "assistant", content: data.reply }
+      const assistantMessage: Message = { role: "assistant", content: data.reply || "Sorry, I couldnt get a response." }
       setMessages([...newMessages, assistantMessage]);
+      console.log(menu?.messageIndex);
     }
     catch (error) {
       console.log("Assistant Error", error);
@@ -178,7 +179,7 @@ export default function Home() {
             onClose={() => setSideChatOpen(false)}
             sideSelectedText={sideSelectedText}
             mainMessages={messages}
-            messageIndex = {mainMessageIndex}
+            messageIndex={mainMessageIndex}
           />
         )
         }

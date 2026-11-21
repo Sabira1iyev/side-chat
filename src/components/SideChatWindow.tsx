@@ -18,7 +18,7 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
 
     const [sideChatMessages, setSideChateMessages] = useState<Message[]>([]);
     const [sideChatUserInput, setSideChatUserInput] = useState(sideSelectedText);
-    
+
     const handleSendSideChatMessage = async () => {
         if (!sideChatUserInput) {
             return;
@@ -28,6 +28,22 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
         setSideChateMessages(newSideChatMessages);
         setSideChatUserInput("");
 
+        const transcript = mainMessages
+            .slice(0, messageIndex + 1)
+            .map((message) =>
+                `${message.role === "user" ? "User" : "Assistant"} : ${message.content}`
+            )
+            .join("\n\n");
+
+        const system =
+            `The user is reading a conversation with an AI and did not understand this part :${sideSelectedText}
+            
+            Here is the conversation so far: ${transcript}
+
+            Answer the user's side question this conversation as context. Refer to its examples when helpful, and keep the answer focused.
+            `;
+
+
         try {
             const res = await fetch("/api/chat", {
                 method: "POST",
@@ -36,7 +52,8 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
                 },
                 body: JSON.stringify(
                     {
-                        messages: newSideChatMessages
+                        messages: newSideChatMessages,
+                        system,
                     }
                 )
             })
@@ -60,7 +77,7 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
 
     useEffect(() => {
         setSideChatUserInput(sideSelectedText);
-    },[sideSelectedText])
+    }, [sideSelectedText])
 
     return (
 

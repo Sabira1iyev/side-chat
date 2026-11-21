@@ -5,16 +5,23 @@ const client = new Anthropic();
 
 export async function POST(req: Request) {
   try {
-    const { messages } = (await req.json()) as { messages: Message[] };
+    const { messages, system } = (await req.json()) as {
+      messages: Message[];
+      system?: string;
+    };
 
     const response = await client.messages.create({
       model: "claude-haiku-5-5",
-      max_tokens: 1024,
+      max_tokens: 4096,
+      system,
       messages,
     });
 
-    const block = response.content[0];
-    const reply = block.type === "text" ? block.text : "";
+
+    const reply = response.content
+      .filter((b) => b.type === "text")
+      .map((b) => b.text)
+      .join();
 
     return NextResponse.json({
       reply,
