@@ -2,9 +2,9 @@
 
 import { Message } from "../types/type"
 import { useState, useEffect } from "react"
-import ReactMarkdown from "react-markdown";
-import { MessageCircle, X, Send } from "lucide-react";
+import { X, Send } from "lucide-react";
 import "@/src/app/globals.css"
+import Markdown from "./ReactMarkdown";
 
 interface SideChatWindowProp {
     onClose: () => void;
@@ -90,9 +90,7 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
 
                         >
                             <div className="space-y-4 font-medium max-w-full overflow-hidden wrap-break-word">
-                                <div className="prose prose-invert prose-sm max-w-none">
-                                    <ReactMarkdown>{msg.content}</ReactMarkdown>
-                                </div>
+                                <Markdown>{msg.content}</Markdown>
                             </div>
                         </div>
                     ))}

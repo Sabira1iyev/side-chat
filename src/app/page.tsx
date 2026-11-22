@@ -4,9 +4,8 @@ import { Message } from "../types/type";
 import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import "./globals.css";
-import ReactMarkdown from "react-markdown";
 import SideChatWindow from "../components/SideChatWindow";
-
+import Markdown from "../components/ReactMarkdown";
 
 
 
@@ -114,9 +113,7 @@ export default function Home() {
                 >
                   <div className="space-y-4 font-medium max-w-full overflow-hidden wrap-break-word">
                     {msg.role === "assistant" ?
-                      <div className="prose prose-invert prose-sm max-w-none">
-                        <ReactMarkdown>{msg.content}</ReactMarkdown>
-                      </div>
+                      <Markdown>{msg.content}</Markdown>
                       :
                       <div className="whitespace-pre-wrap">{msg.content}</div>
                     }
