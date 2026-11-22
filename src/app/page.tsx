@@ -113,7 +113,14 @@ export default function Home() {
                   onContextMenu={(e) => handleContextMenu(e, idx)}
                 >
                   <div className="space-y-4 font-medium max-w-full overflow-hidden wrap-break-word">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    {msg.role === "assistant" ?
+                      <div className="prose prose-invert prose-sm max-w-none">
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      </div>
+                      :
+                      <div className="whitespace-pre-wrap">{msg.content}</div>
+                    }
+
                   </div>
                 </div>
               ))}

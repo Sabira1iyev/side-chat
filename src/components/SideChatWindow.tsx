@@ -90,7 +90,9 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
 
                         >
                             <div className="space-y-4 font-medium max-w-full overflow-hidden wrap-break-word">
-                                <ReactMarkdown>{msg.content}</ReactMarkdown>
+                                <div className="prose prose-invert prose-sm max-w-none">
+                                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                                </div>
                             </div>
                         </div>
                     ))}
