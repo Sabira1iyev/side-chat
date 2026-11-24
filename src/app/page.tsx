@@ -1,7 +1,7 @@
 ﻿"use client"
 
 import { Message } from "../types/type";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import "./globals.css";
 import SideChatWindow from "../components/SideChatWindow";
@@ -24,6 +24,11 @@ export default function Home() {
   const [sideSelectedText, SideSetSelectedText] = useState("");
   const [mainMessageIndex, setMainMessageIndex] = useState(0);
   const [isThinking, setIsThinking] = useState(false);
+  const messageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messageRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.currentTarget;
@@ -69,7 +74,7 @@ export default function Home() {
       console.log("Assistant Error", error);
       setMessages([...newMessages, { role: "assistant", content: "Connection error. Please try again." }])
     }
-    finally{
+    finally {
       setIsThinking(false);
     }
   }
@@ -134,6 +139,7 @@ export default function Home() {
                   </div>
                 )
               }
+              <div ref={messageRef} />
             </div>
             {menu && (
               <div className="fixed z-50" style={{ left: menu.x, top: menu.y }}

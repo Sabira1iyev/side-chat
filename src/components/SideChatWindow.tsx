@@ -1,7 +1,7 @@
-﻿"use client"
+"use client"
 
 import { Message } from "../types/type"
-import { useState, useEffect, use } from "react"
+import { useState, useEffect, useRef } from "react"
 import { X, Send } from "lucide-react";
 import "@/src/app/globals.css"
 import Markdown from "./ReactMarkdown";
@@ -19,11 +19,17 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
     const [sideChatMessages, setSideChateMessages] = useState<Message[]>([]);
     const [sideChatUserInput, setSideChatUserInput] = useState(sideSelectedText);
     const [isSideAssistantThinking, setIsSideAssistantThinking] = useState(false);
+    const messageRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        messageRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [sideChatMessages]);
 
     const handleSendSideChatMessage = async () => {
         if (!sideChatUserInput) {
             return;
         }
+        
+        
         const userMessages: Message = { role: "user", content: sideChatUserInput };
         const newSideChatMessages = [...sideChatMessages, userMessages];
         setSideChateMessages(newSideChatMessages);
@@ -44,8 +50,6 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
 
             Answer the user's side question this conversation as context. Refer to its examples when helpful, and keep the answer focused.
             `;
-
-
         try {
             const res = await fetch("/api/chat", {
                 method: "POST",
@@ -106,8 +110,8 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
                                 Thinking
                             </div>
                         </div>
-                    )
-                }
+                    )}
+                <div ref={messageRef} />
 
 
             </div>
