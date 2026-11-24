@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { Message } from "../types/type"
 import { useState, useEffect, useRef } from "react"
@@ -28,13 +28,14 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
         if (!sideChatUserInput) {
             return;
         }
-        
-        
+
+
         const userMessages: Message = { role: "user", content: sideChatUserInput };
         const newSideChatMessages = [...sideChatMessages, userMessages];
         setSideChateMessages(newSideChatMessages);
         setIsSideAssistantThinking(true);
         setSideChatUserInput("");
+
 
         const transcript = mainMessages
             .slice(0, messageIndex + 1)
@@ -87,6 +88,8 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
     useEffect(() => {
         setSideChatUserInput(sideSelectedText);
     }, [sideSelectedText])
+
+
 
     return (
 

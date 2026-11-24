@@ -1,7 +1,7 @@
 ﻿"use client"
 
 import { Message } from "../types/type";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import "./globals.css";
 import SideChatWindow from "../components/SideChatWindow";
@@ -25,6 +25,7 @@ export default function Home() {
   const [mainMessageIndex, setMainMessageIndex] = useState(0);
   const [isThinking, setIsThinking] = useState(false);
   const messageRef = useRef<HTMLDivElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     messageRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -78,6 +79,25 @@ export default function Home() {
       setIsThinking(false);
     }
   }
+
+  useEffect(() => {
+    const savedMessages = localStorage.getItem("phoenix-messages")
+
+    if (savedMessages) {
+      try {
+        setMessages(JSON.parse(savedMessages));
+      }
+      catch (error) {
+        console.log("Local storage error:", error);
+      }
+    }
+    setIsLoaded(true)
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    localStorage.setItem("phoenix-messages", JSON.stringify(messages));
+  }, [messages, isLoaded])
 
   const handleContextMenu = (e: React.MouseEvent, index: number) => {
     const text = window.getSelection()?.toString().trim();
