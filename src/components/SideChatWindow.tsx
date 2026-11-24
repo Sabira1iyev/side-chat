@@ -1,7 +1,7 @@
 ﻿"use client"
 
 import { Message } from "../types/type"
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { X, Send } from "lucide-react";
 import "@/src/app/globals.css"
 import Markdown from "./ReactMarkdown";
@@ -18,6 +18,7 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
 
     const [sideChatMessages, setSideChateMessages] = useState<Message[]>([]);
     const [sideChatUserInput, setSideChatUserInput] = useState(sideSelectedText);
+    const [isSideAssistantThinking, setIsSideAssistantThinking] = useState(false);
 
     const handleSendSideChatMessage = async () => {
         if (!sideChatUserInput) {
@@ -26,6 +27,7 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
         const userMessages: Message = { role: "user", content: sideChatUserInput };
         const newSideChatMessages = [...sideChatMessages, userMessages];
         setSideChateMessages(newSideChatMessages);
+        setIsSideAssistantThinking(true);
         setSideChatUserInput("");
 
         const transcript = mainMessages
@@ -66,6 +68,9 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
             console.log("Side chat error: ", error);
             setSideChateMessages([...newSideChatMessages, { role: "assistant", content: "Connection error. Please try again." }])
         }
+        finally {
+            setIsSideAssistantThinking(false);
+        }
     }
 
     const handleSideChatChangeMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -94,6 +99,15 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
                             </div>
                         </div>
                     ))}
+                {
+                    isSideAssistantThinking && (
+                        <div className="flex justify-start">
+                            <div className="border border-zinc-800 text-gray-300 rounded-2xl px-4 py-2 text-sm max-w-[80%] rounded-tl-none animate-pulse">
+                                Thinking
+                            </div>
+                        </div>
+                    )
+                }
 
 
             </div>

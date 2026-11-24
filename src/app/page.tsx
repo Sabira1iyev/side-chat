@@ -23,6 +23,7 @@ export default function Home() {
   const sideButtonRef = useRef<HTMLDivElement>(null);
   const [sideSelectedText, SideSetSelectedText] = useState("");
   const [mainMessageIndex, setMainMessageIndex] = useState(0);
+  const [isThinking, setIsThinking] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.currentTarget;
@@ -38,6 +39,7 @@ export default function Home() {
     setMessages(newMessages);
     setUserInput("");
     const textarea = document.querySelector<HTMLTextAreaElement>("#message-input");
+    setIsThinking(true);
 
 
     if (textarea) textarea.style.height = "auto";
@@ -66,6 +68,9 @@ export default function Home() {
     catch (error) {
       console.log("Assistant Error", error);
       setMessages([...newMessages, { role: "assistant", content: "Connection error. Please try again." }])
+    }
+    finally{
+      setIsThinking(false);
     }
   }
 
@@ -117,10 +122,18 @@ export default function Home() {
                       :
                       <div className="whitespace-pre-wrap">{msg.content}</div>
                     }
-
                   </div>
                 </div>
               ))}
+              {
+                isThinking && (
+                  <div className="flex justify-start">
+                    <div className="border border-zinc-800 text-gray-300 rounded-2xl px-4 py-2 text-sm max-w-[80%] rounded-tl-none animate-pulse">
+                      Thinking
+                    </div>
+                  </div>
+                )
+              }
             </div>
             {menu && (
               <div className="fixed z-50" style={{ left: menu.x, top: menu.y }}
