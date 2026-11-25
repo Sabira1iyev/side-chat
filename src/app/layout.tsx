@@ -11,8 +11,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Side Chat",
-  description: "Generated Phoenix Web",
+  title: "Phoenix",
+  description: "Phoenix: rise from confusion with side chats",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

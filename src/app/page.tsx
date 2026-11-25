@@ -2,7 +2,7 @@
 
 import { Message } from "../types/type";
 import { useEffect, useRef, useState } from "react";
-import { Send, Square } from "lucide-react";
+import { Flame, Send, Square } from "lucide-react";
 import "./globals.css";
 import SideChatWindow from "../components/SideChatWindow";
 import Markdown from "../components/ReactMarkdown";
@@ -128,8 +128,9 @@ export default function Home() {
   return (
 
     <div className="flex h-screen flex-col bg-zinc-900 text-zinc-100">
-      <header className="border-b border-zinc-800 bg-zinc-950 px-6 py-4">
-        <h1 className="text-lg font-semibold">Phoenix</h1>
+      <header className="flex items-center gap-2 border-b border-orange-500/30 px-6 py-4 shadow-[0_1px_20px_rgba(249,115,22,0.25)]">
+        <Flame size={22} className="text-orange-500" fill="currentColor" />
+        <h1 className="phoenix-text text-lg font-bold tracking-wide">PHOENIX AI</h1>
       </header>
       <div className="flex min-h-0 flex-1">
         <div className="relative flex min-w-0 flex-1 flex-col">
@@ -137,7 +138,7 @@ export default function Home() {
           <main className="flex-1 overflow-y-auto px-4 py-6 scrollbar-none">
             <div className="mx-auto flex max-w-2xl flex-col gap-4">
               {messages.map((msg, idx) => (
-                <div className={`animate_message py-2 px-5 my-1 rounded-[18px] w-max max-w-[80%] text-sm ${msg.role === "user" ? "bg-blue-600 text-white ml-auto shadow-sm" : "text-text shadow-sm"}`}
+                <div className={`animate_message py-2 px-5 my-1 rounded-[18px] w-max max-w-[80%] text-sm ${msg.role === "user" ? "phoenix-gradient text-white ml-auto shadow-sm" : "bg-zinc-800 border border-zinc-700 text-zinc-100 shadow-sm"}`}
                   key={idx}
                   onContextMenu={(e) => handleContextMenu(e, idx)}
                 >
@@ -153,8 +154,8 @@ export default function Home() {
               {
                 isThinking && (
                   <div className="flex justify-start">
-                    <div className="border border-zinc-800 text-gray-300 rounded-2xl px-4 py-2 text-sm max-w-[80%] rounded-tl-none animate-pulse">
-                      Thinking
+                    <div className="border border-orange-500/30 text-orange-300 rounded-2xl px-4 py-2 text-sm max-w-[80%] rounded-tl-none animate-pulse">
+                      Phoenix is rising...
                     </div>
                   </div>
                 )
@@ -167,7 +168,7 @@ export default function Home() {
               >
                 <button
                   type="button"
-                  className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 shadow-lg hover:bg-zinc-700"
+                  className="rounded-md border border-orange-500/40 bg-zinc-800 px-3 py-2 text-sm text-orange-100 shadow-lg hover:bg-orange-500/20"
                   onClick={() => {
 
                     SideSetSelectedText(menu.text);
@@ -204,13 +205,13 @@ export default function Home() {
                 rows={1}
                 value={userInput}
                 onChange={handleChange}
-                placeholder="Enter your message"
+                placeholder="Ask Phoenix anything..."
                 className="max-h-50 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-5 text-zinc-100 outline-none placeholder:text-zinc-500 scrollbar-none"
               />
               {isThinking ?
                 <button
                   type="submit"
-                  className="rounded-full bg-blue-600 p-3 text-sm font-medium text-white hover:bg-blue-700"
+                  className="phoenix-gradient rounded-full p-3 text-sm font-medium text-white"
                 >
 
                   <Square size={16} strokeWidth={3} fill="currentColor" className="rounded-full" />
@@ -219,7 +220,7 @@ export default function Home() {
                  :
                 <button
                   type="submit"
-                  className="rounded-full bg-blue-600 px-7 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                  className="phoenix-gradient rounded-full px-7 py-2 text-sm font-medium text-white"
                 >
                   <Send size={15} className="cursor-pointer" />
 

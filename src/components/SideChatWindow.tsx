@@ -97,11 +97,11 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
 
     return (
 
-        <aside className="animate-modal relative mr-4 flex h-[80vh] w-200 shrink-0 flex-col self-center overflow-hidden rounded-[28px] border border-white/10 bg-zinc-900/70 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-black/20 backdrop-blur-2xl backdrop-saturate-150">
+        <aside className="animate-modal relative mr-4 flex h-[80vh] w-200 shrink-0 flex-col self-center overflow-hidden rounded-[28px] border border-orange-500/20 bg-zinc-900/70 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-black/20 backdrop-blur-2xl backdrop-saturate-150">
             <div className="flex-1 overflow-y-auto w-full px-2 pt-14 scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 {
                     sideChatMessages.map((msg, index) => (
-                        <div className={`animate_message py-3 px-5 my-1 mt-5 rounded-[20px] w-max max-w-[80%] text-sm ${msg.role === "user" ? "bg-[#0a84ff] text-white ml-auto" : "bg-white/10 text-zinc-100"}`}
+                        <div className={`animate_message py-3 px-5 my-1 mt-5 rounded-[20px] w-max max-w-[80%] text-sm ${msg.role === "user" ? "phoenix-gradient text-white ml-auto" : "bg-white/10 text-zinc-100"}`}
                             key={index}
 
                         >
@@ -113,8 +113,8 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
                 {
                     isSideAssistantThinking && (
                         <div className="flex justify-start">
-                            <div className="border border-zinc-800 text-gray-300 rounded-2xl px-4 py-2 text-sm max-w-[80%] rounded-tl-none animate-pulse">
-                                Thinking
+                            <div className="border border-orange-500/30 text-orange-300 rounded-2xl px-4 py-2 text-sm max-w-[80%] rounded-tl-none animate-pulse">
+                                Phoenix is rising...
                             </div>
                         </div>
                     )}
@@ -143,12 +143,12 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
                         value={sideChatUserInput}
                         ref={textareaRef}
                         onChange={handleSideChatChangeMessage}
-                        placeholder="Ask a follow-up about this..."
+                        placeholder="Ask Phoenix a follow-up..."
                         className="max-h-50 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-5 text-zinc-100 outline-none placeholder:text-zinc-500 scrollbar-none"
                     />
                     <button
                         type="submit"
-                        className="rounded-full bg-[#0a84ff] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#3395ff] active:scale-95"
+                        className="phoenix-gradient rounded-full px-4 py-2 text-sm font-medium text-white transition active:scale-95"
                     >
                         <Send size={15} className="cursor-pointer" />
                     </button>
