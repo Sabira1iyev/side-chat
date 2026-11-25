@@ -20,6 +20,7 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
     const [sideChatUserInput, setSideChatUserInput] = useState(sideSelectedText);
     const [isSideAssistantThinking, setIsSideAssistantThinking] = useState(false);
     const messageRef = useRef<HTMLDivElement>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     useEffect(() => {
         messageRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [sideChatMessages]);
@@ -35,6 +36,9 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
         setSideChateMessages(newSideChatMessages);
         setIsSideAssistantThinking(true);
         setSideChatUserInput("");
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto";
+        }
 
 
         const transcript = mainMessages
@@ -125,7 +129,7 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
                 className={`w-full px-4 py-4 ${sideChatMessages.length === 0 ? "absolute left-0 top-1/2 -translate-y-1/2" : "mt-auto"
                     }`}
             >
-                <div className={`mx-auto flex max-w-2xl gap-2 rounded-full border border-white/10 bg-white/5 p-1.5 backdrop-blur transition focus-within:border-white/20 focus-within:bg-white/10 ${sideChatUserInput.length === 0 ? "items-center" : "items-end"
+                <div className={`mx-auto flex max-w-2xl gap-2 rounded-3xl border border-white/10 bg-white/5 p-1.5 backdrop-blur transition focus-within:border-white/20 focus-within:bg-white/10 ${sideChatUserInput.length === 0 ? "items-center" : "items-end"
                     }`}>
                     <textarea
                         onKeyDown={(e) => {
@@ -137,9 +141,10 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
                         id="side-message-input"
                         rows={1}
                         value={sideChatUserInput}
+                        ref={textareaRef}
                         onChange={handleSideChatChangeMessage}
                         placeholder="Ask a follow-up about this..."
-                        className="max-h-50 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-5 text-zinc-100 outline-none placeholder:text-zinc-500 scrollbar-none [&::-webkit-scrollbar]:hidden"
+                        className="max-h-50 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-5 text-zinc-100 outline-none placeholder:text-zinc-500 scrollbar-none"
                     />
                     <button
                         type="submit"
