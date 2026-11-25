@@ -2,7 +2,7 @@
 
 import { Message } from "../types/type";
 import { useEffect, useRef, useState } from "react";
-import { Send } from "lucide-react";
+import { Send, Square } from "lucide-react";
 import "./globals.css";
 import SideChatWindow from "../components/SideChatWindow";
 import Markdown from "../components/ReactMarkdown";
@@ -134,14 +134,14 @@ export default function Home() {
       <div className="flex min-h-0 flex-1">
         <div className="relative flex min-w-0 flex-1 flex-col">
 
-          <main className="flex-1 overflow-y-auto px-4 py-6">
+          <main className="flex-1 overflow-y-auto px-4 py-6 scrollbar-none">
             <div className="mx-auto flex max-w-2xl flex-col gap-4">
               {messages.map((msg, idx) => (
                 <div className={`animate_message py-2 px-5 my-1 rounded-[18px] w-max max-w-[80%] text-sm ${msg.role === "user" ? "bg-blue-600 text-white ml-auto shadow-sm" : "text-text shadow-sm"}`}
                   key={idx}
                   onContextMenu={(e) => handleContextMenu(e, idx)}
                 >
-                  <div className="space-y-4 font-medium max-w-full overflow-hidden wrap-break-word">
+                  <div className="space-y-4 py-1 font-medium max-w-full overflow-hidden wrap-break-word">
                     {msg.role === "assistant" ?
                       <Markdown>{msg.content}</Markdown>
                       :
@@ -207,12 +207,26 @@ export default function Home() {
                 placeholder="Enter your message"
                 className="max-h-50 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-5 text-zinc-100 outline-none placeholder:text-zinc-500 scrollbar-none"
               />
-              <button
-                type="submit"
-                className="rounded-full bg-blue-600 px-7 py-2 text-sm font-medium text-white hover:bg-blue-700"
-              >
-                <Send size={15} className="cursor-pointer" />
-              </button>
+              {isThinking ?
+                <button
+                  type="submit"
+                  className="rounded-full bg-blue-600 p-3 text-sm font-medium text-white hover:bg-blue-700"
+                >
+
+                  <Square size={16} strokeWidth={3} fill="currentColor" className="rounded-full" />
+
+                </button>
+                 :
+                <button
+                  type="submit"
+                  className="rounded-full bg-blue-600 px-7 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                >
+                  <Send size={15} className="cursor-pointer" />
+
+                </button>
+
+              }
+
             </div>
           </form>
         </div>
