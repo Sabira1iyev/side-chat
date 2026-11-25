@@ -1,17 +1,17 @@
 ﻿"use client"
 
-import { Message } from "../types/type";
+import { Message, Thread, Chat } from "../types/type";
 import { useEffect, useRef, useState } from "react";
 import { Flame, Send, Square } from "lucide-react";
 import "./globals.css";
 import SideChatWindow from "../components/SideChatWindow";
 import Markdown from "../components/ReactMarkdown";
+import { Messages } from "@anthropic-ai/sdk/resources.js";
 
 
 
 export default function Home() {
 
-  const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState("");
   const [menu, setMenu] = useState<{
     x: number,
@@ -26,6 +26,11 @@ export default function Home() {
   const [isThinking, setIsThinking] = useState(false);
   const messageRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
+
+  const activeChat = chats.find((chat) => chat.id === activeChatId);
+  const messages = activeChat?.messages ?? [];
 
   useEffect(() => {
     messageRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -40,12 +45,35 @@ export default function Home() {
 
   const handleSendMessage = async () => {
     if (!userInput) return;
+
+    let chatId = activeChatId;
+    if (!chatId) {
+      chatId = crypto.randomUUID();
+      const newChat: Chat = {
+        id: chatId,
+        title: userInput.slice(0, 40),
+        createdAt: Date.now(),
+        messages: [],
+        threads: [],
+      }
+      setChats((prev) => [newChat, ...prev])
+      setActiveChatId(chatId);
+    }
+    const updateMessages = (chatId: string, newMessages: Message[]) => {
+      setChats((prev) =>
+        prev.map((chat) =>
+          chat.id === chatId ? { ...chat, messages: newMessages } : chat
+        )
+      )
+    }
+
     const userMessage: Message = { role: "user", content: userInput }
     const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
+    updateMessages(chatId, newMessages);
     setUserInput("");
     const textarea = document.querySelector<HTMLTextAreaElement>("#message-input");
     setIsThinking(true);
+
 
 
     if (textarea) textarea.style.height = "auto";
@@ -63,36 +91,38 @@ export default function Home() {
       if (!res.ok) {
         console.log("Error: ", data.message)
         const reply = data.reply || data.message || "Soryy, I couldn't get a response.";
-        setMessages([...newMessages, { role: "assistant", content: reply }])
+        updateMessages(chatId, [...newMessages, { role: "assistant", content: reply }]);
         return
       }
 
       const assistantMessage: Message = { role: "assistant", content: data.reply || "Sorry, I couldnt get a response." }
-      setMessages([...newMessages, assistantMessage]);
-      console.log(menu?.messageIndex);
+      updateMessages(chatId, [...newMessages, assistantMessage]);
+      console.log(chats);
     }
     catch (error) {
       console.log("Assistant Error", error);
-      setMessages([...newMessages, { role: "assistant", content: "Connection error. Please try again." }])
+      updateMessages(chatId, [...newMessages, {
+        role: "assistant", content: "Connection error, please try again later."
+      }])
     }
     finally {
       setIsThinking(false);
     }
   }
 
-  useEffect(() => {
-    const savedMessages = localStorage.getItem("phoenix-messages")
+  // useEffect(() => {
+  //   const savedMessages = localStorage.getItem("phoenix-messages")
 
-    if (savedMessages) {
-      try {
-        setMessages(JSON.parse(savedMessages));
-      }
-      catch (error) {
-        console.log("Local storage error:", error);
-      }
-    }
-    setIsLoaded(true)
-  }, []);
+  //   if (savedMessages) {
+  //     try {
+  //       setMessages(JSON.parse(savedMessages));
+  //     }
+  //     catch (error) {
+  //       console.log("Local storage error:", error);
+  //     }
+  //   }
+  //   setIsLoaded(true)
+  // }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -217,7 +247,7 @@ export default function Home() {
                   <Square size={16} strokeWidth={3} fill="currentColor" className="rounded-full" />
 
                 </button>
-                 :
+                :
                 <button
                   type="submit"
                   className="phoenix-gradient rounded-full px-7 py-2 text-sm font-medium text-white"

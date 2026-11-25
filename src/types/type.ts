@@ -5,13 +5,20 @@ export interface Message {
   content: string;
 }
 
-
 export interface Thread {
-  id:string;
+  id: string;
   messages: Message[];
   branch?: {
     parentThreadId: string;
     messageIndex: number;
-    selectedText: string; 
-  }
+    selectedText: string;
+  };
+}
+
+export interface Chat {
+  id: string;
+  title: string;
+  createdAt: number;
+  messages: Message[];
+  threads: Thread[];
 }
