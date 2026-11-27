@@ -2,7 +2,7 @@
 
 import { Message, Thread, Chat } from "../types/type";
 import { useEffect, useRef, useState } from "react";
-import { Flame, Send, Square } from "lucide-react";
+import { Flame, Send, Square, PanelLeft } from "lucide-react";
 import "./globals.css";
 import SideChatWindow from "../components/SideChatWindow";
 import Markdown from "../components/ReactMarkdown";
@@ -28,6 +28,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [chats, setChats] = useState<Chat[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const activeChat = chats.find((chat) => chat.id === activeChatId);
   const messages = activeChat?.messages ?? [];
@@ -97,7 +98,6 @@ export default function Home() {
 
       const assistantMessage: Message = { role: "assistant", content: data.reply || "Sorry, I couldnt get a response." }
       updateMessages(chatId, [...newMessages, assistantMessage]);
-      console.log(chats);
     }
     catch (error) {
       console.log("Assistant Error", error);
@@ -110,24 +110,32 @@ export default function Home() {
     }
   }
 
-  // useEffect(() => {
-  //   const savedMessages = localStorage.getItem("phoenix-messages")
+  useEffect(() => {
+    const savedMessages = localStorage.getItem("phoenix-chats")
 
-  //   if (savedMessages) {
-  //     try {
-  //       setMessages(JSON.parse(savedMessages));
-  //     }
-  //     catch (error) {
-  //       console.log("Local storage error:", error);
-  //     }
-  //   }
-  //   setIsLoaded(true)
-  // }, []);
+    if (savedMessages) {
+      try {
+        const parsed = JSON.parse(savedMessages) as Chat[];
+        setChats(parsed);
+        setActiveChatId(parsed[0]?.id ?? null);
+      }
+      catch (error) {
+        console.log("Local storage error:", error);
+      }
+    }
+    setIsLoaded(true)
+  }, []);
 
   useEffect(() => {
+
     if (!isLoaded) return;
-    localStorage.setItem("phoenix-messages", JSON.stringify(messages));
-  }, [messages, isLoaded])
+    try {
+      localStorage.setItem("phoenix-chats", JSON.stringify(chats));
+    }
+    catch (error) {
+      console.log("Error while sending message, please try again later.")
+    }
+  }, [chats, isLoaded])
 
   const handleContextMenu = (e: React.MouseEvent, index: number) => {
     const text = window.getSelection()?.toString().trim();
@@ -153,22 +161,25 @@ export default function Home() {
       document.removeEventListener("mousedown", clickOutside)
     }
   }, [menu]);
-
-
   return (
 
-    <div className="flex h-screen flex-col bg-zinc-900 text-zinc-100">
-      <header className="flex items-center gap-2 border-b border-orange-500/30 px-6 py-4 shadow-[0_1px_20px_rgba(249,115,22,0.25)]">
+    <div className="flex h-dvh flex-col bg-zinc-900 text-zinc-100">
+      <header className="flex items-center gap-2 border-b border-orange-500/30 px-4 py-3 sm:px-6 sm:py-4 shadow-[0_1px_20px_rgba(249,115,22,0.25)]">
+        <button type="button"
+        className="cursor-pointer"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+          <PanelLeft size={20} />
+        </button>
         <Flame size={22} className="text-orange-500" fill="currentColor" />
         <h1 className="phoenix-text text-lg font-bold tracking-wide">PHOENIX AI</h1>
       </header>
       <div className="flex min-h-0 flex-1">
         <div className="relative flex min-w-0 flex-1 flex-col">
 
-          <main className="flex-1 overflow-y-auto px-4 py-6 scrollbar-none">
+          <main className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 sm:py-6 scrollbar-none">
             <div className="mx-auto flex max-w-2xl flex-col gap-4">
               {messages.map((msg, idx) => (
-                <div className={`animate_message py-2 px-5 my-1 rounded-[18px] w-max max-w-[80%] text-sm ${msg.role === "user" ? "phoenix-gradient text-white ml-auto shadow-sm" : "bg-zinc-800 border border-zinc-700 text-zinc-100 shadow-sm"}`}
+                <div className={`animate_message py-2 px-4 sm:px-5 my-1 rounded-[18px] w-max max-w-[90%] sm:max-w-[80%] text-sm ${msg.role === "user" ? "phoenix-gradient text-white ml-auto shadow-sm" : "bg-zinc-800 border border-zinc-700 text-zinc-100 shadow-sm"}`}
                   key={idx}
                   onContextMenu={(e) => handleContextMenu(e, idx)}
                 >
@@ -215,7 +226,7 @@ export default function Home() {
           </main>
 
 
-          <form className={`w-full px-4 py-4 ${messages.length === 0 ? "absolute left-0 top-1/2 -translate-y-1/2" : "mt-auto"
+          <form className={`w-full px-3 py-3 sm:px-4 sm:py-4 ${messages.length === 0 ? "absolute left-0 top-1/2 -translate-y-1/2" : "mt-auto"
             }`}
             onSubmit={(e) => {
               e.preventDefault();
@@ -236,7 +247,7 @@ export default function Home() {
                 value={userInput}
                 onChange={handleChange}
                 placeholder="Ask Phoenix anything..."
-                className="max-h-50 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-5 text-zinc-100 outline-none placeholder:text-zinc-500 scrollbar-none"
+                className="max-h-50 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-base sm:text-sm leading-5 text-zinc-100 outline-none placeholder:text-zinc-500 scrollbar-none"
               />
               {isThinking ?
                 <button
@@ -250,7 +261,7 @@ export default function Home() {
                 :
                 <button
                   type="submit"
-                  className="phoenix-gradient rounded-full px-7 py-2 text-sm font-medium text-white"
+                  className="phoenix-gradient rounded-full px-5 py-2 sm:px-7 text-sm font-medium text-white"
                 >
                   <Send size={15} className="cursor-pointer" />
 

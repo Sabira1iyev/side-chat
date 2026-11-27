@@ -97,11 +97,11 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
 
     return (
 
-        <aside className="animate-modal relative mr-4 flex h-[80vh] w-200 shrink-0 flex-col self-center overflow-hidden rounded-[28px] border border-orange-500/20 bg-zinc-900/70 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-black/20 backdrop-blur-2xl backdrop-saturate-150">
+        <aside className="animate-modal fixed inset-x-3 bottom-4 top-24 z-40 flex flex-col overflow-hidden rounded-[24px] border border-orange-500/20 bg-zinc-900/80 md:relative md:inset-auto md:z-auto md:mr-4 md:h-[80vh] md:w-[26rem] md:shrink-0 md:self-center md:rounded-[28px] md:bg-zinc-900/70 lg:w-200 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ring-1 ring-black/20 backdrop-blur-2xl backdrop-saturate-150">
             <div className="flex-1 overflow-y-auto w-full px-2 pt-14 scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 {
                     sideChatMessages.map((msg, index) => (
-                        <div className={`animate_message py-3 px-5 my-1 mt-5 rounded-[20px] w-max max-w-[80%] text-sm ${msg.role === "user" ? "phoenix-gradient text-white ml-auto" : "bg-white/10 text-zinc-100"}`}
+                        <div className={`animate_message py-3 px-4 sm:px-5 my-1 mt-5 rounded-[20px] w-max max-w-[90%] sm:max-w-[80%] text-sm ${msg.role === "user" ? "phoenix-gradient text-white ml-auto" : "bg-white/10 text-zinc-100"}`}
                             key={index}
 
                         >
@@ -144,7 +144,7 @@ export default function SideChatWindow({ onClose, sideSelectedText, mainMessages
                         ref={textareaRef}
                         onChange={handleSideChatChangeMessage}
                         placeholder="Ask Phoenix a follow-up..."
-                        className="max-h-50 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-sm leading-5 text-zinc-100 outline-none placeholder:text-zinc-500 scrollbar-none"
+                        className="max-h-50 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-3 py-2.5 text-base sm:text-sm leading-5 text-zinc-100 outline-none placeholder:text-zinc-500 scrollbar-none"
                     />
                     <button
                         type="submit"
